@@ -7,6 +7,33 @@
 </head>
 <body>
   <h1>Painel Administrador</h1>
-  <p>Versão resumida. A versão completa já está no projeto anterior (Canvas).</p>
+  <p>Adicione ou edite produtos e baixe o JSON para subir no GitHub.</p>
+  <button onclick="add()">+ Produto</button>
+  <button onclick="download()">Baixar JSON</button>
+  <div id="list"></div>
+<script>
+  let products=[];
+  function render(){
+    const list=document.getElementById('list'); list.innerHTML='';
+    products.forEach((p,i)=>{
+      list.innerHTML+=`
+        <div style='border:1px solid #ccc;padding:10px;margin:10px 0'>
+          <input value='${p.name}' onchange='products[${i}].name=this.value'><br>
+          <textarea onchange='products[${i}].desc=this.value'>${p.desc}</textarea><br>
+          <input value='${p.price}' onchange='products[${i}].price=this.value'><br>
+          <input value='${p.image}' onchange='products[${i}].image=this.value'><br>
+          <button onclick='removeP(${i})'>Remover</button>
+        </div>`;
+    });
+  }
+  function add(){products.push({name:'Novo produto',desc:'',price:'',image:''});render();}
+  function removeP(i){products.splice(i,1);render();}
+  function download(){
+    const a=document.createElement('a');
+    const file=new Blob([JSON.stringify({products},null,2)],{type:'application/json'});
+    a.href=URL.createObjectURL(file);a.download='products.json';a.click();
+  }
+  render();
+</script>
 </body>
 </html>
